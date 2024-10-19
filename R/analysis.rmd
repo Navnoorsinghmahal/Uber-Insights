@@ -1,0 +1,110 @@
+---
+output:
+  pdf_document: default
+  html_document: default
+---
+## Uber Insights: A Ride Through Data
+### Load necessary libraries
+```{r}
+library(ggplot2)
+library(dplyr)
+library(lubridate)
+```
+
+
+### Read the dataset
+```{r}
+data <- read.csv("uber-raw-data-aug14.csv")
+head(data)
+```
+### Examine the structure of the Date.Time column to understand its format and then convert Date.Time from character format to POSIXct for easier date-time manipulation.
+### The next step is to extract additional date-time features: Day, Weekday, and Hour
+
+```{r}
+str(data$Date.Time)
+
+# Convert Date.Time from character to POSIXct
+data$Date.Time <- as.POSIXct(data$Date.Time, format = "%m/%d/%Y %H:%M:%S")
+
+data$Day <- day(data$Date.Time)
+data$Weekday <- wday(data$Date.Time, label = TRUE)
+data$Hour <- hour(data$Date.Time)
+
+```
+
+### Create a bar plot to visualize the number of Uber trips per day
+```{r}
+ggplot(data, aes(x = Day)) +
+  geom_bar(fill = "blue") +
+  labs(title = "Daily Uber Trips", x = "Day", y = "Number of Trips") +
+  theme_dark()
+
+```
+### Create a bar plot to visualize the number of Uber trips per hour
+```{r}
+ggplot(data, aes(x=Hour)) + 
+  geom_bar(fill = "brown") + 
+  labs(title = "Hourly Uber Trips", x = "Hours", y = "Number of Trips") + 
+  theme_dark()
+```
+### Create a bar plot to visualize the number of Uber trips by weekday
+
+```{r}
+ggplot(data, aes(x=Weekday)) + 
+  geom_bar(fill = "lightyellow")+
+  labs(title = "Weekly Uber Trips", x = "Days of the Week", y = "Number of trips") +
+  theme_dark()
+```
+### Display summary statistics of the dataset
+```{r}
+summary(data)
+```
+### Count the number of trips grouped by Weekday and Hour
+```{r}
+# Count trips by weekday and hour
+trip_counts <- data %>%
+  group_by(Weekday, Hour) %>%
+  summarise(Trip_Count = n())
+
+# View the first few rows of the summary
+head(trip_counts)
+
+```
+### Create a heatmap to visualize the number of Uber trips by Hour and Weekday
+```{r}
+# Create a heatmap
+ggplot(trip_counts, aes(x = Hour, y = Weekday, fill = Trip_Count)) +
+  geom_tile(color = "white") +
+  scale_fill_gradient(low = "white", high = "blue") +
+  labs(title = "Heatmap of Uber Trips by Hour and Weekday", x = "Hour", y = "Weekday") +
+  theme_dark()
+```
+### Count the number of trips by Latitude and Longitude to visualize geographic distribution and create a scatterplot to show the number of Uber trips based on Latitude and Longitude
+```{r}
+trip_counts_geo <- data %>%
+  group_by(Lat, Lon) %>%
+  summarise(Trip_Count = n(), .groups = 'drop')
+
+ggplot(trip_counts_geo, aes(x = Lon, y = Lat, size = Trip_Count, color = Trip_Count)) +
+  geom_point(alpha = 0.4) +
+  scale_color_gradient(low = "white", high = "blue") +
+  labs(title = "Number of Uber Trips by Latitude and Longitude",
+       x = "Longitude",
+       y = "Latitude",
+       size = "Number of Trips") +
+  theme_dark()
+```
+
+
+
+
+## Summary of Uber Trip Analysis
+
+### The analysis of Uber trip data for August 2014 reveals several key insights:
+
+### Peak Profitability: Friday stands out as the most profitable day for Uber, indicating a higher demand for rides as the weekend approaches.
+### Lower Usage on Mondays: Monday shows the least number of trips, suggesting that fewer people opt for Uber at the beginning of the week.
+### Busiest Hour: The period between 5 PM and 6 PM is identified as the busiest hour for Uber, likely due to the end of the workday when many commuters seek rides.
+### Early Morning Demand: There is a noticeable increase in Uber trips starting around 6 AM, indicating that early morning rides are common, possibly for commuters heading to work.
+### Geographic Concentration: Most Uber trips originate in the Manhattan region of New York, highlighting this area as a central hub for ride requests.
+### These insights can be valuable for understanding rider behavior and optimizing service strategies for Uber.
