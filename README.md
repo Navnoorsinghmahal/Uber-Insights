@@ -56,7 +56,6 @@ Uber-Insights/
 - `ggplot2`
 - `dplyr`
 - `lubridate`
-- `reshape2`
   
 ## Summary of Insights
 
