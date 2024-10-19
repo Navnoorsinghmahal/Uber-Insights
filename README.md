@@ -46,8 +46,8 @@ Uber-Insights/
 ├── data/                   # Directory for datasets
 │   └── uber-raw-data-aug14.csv
 ├── R/                      # R scripts and analyses
-│   └── analysis.R          # Main analysis script
-├── outputs/                # Directory for output plots and summaries
+│   └── analysis.rmd        # Main analysis script
+├── analysis.pdf            # File for output plots and summaries
 ├── README.md               # Project documentation
 
 ```
