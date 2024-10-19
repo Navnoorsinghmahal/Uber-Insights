@@ -1,4 +1,4 @@
-# Uber Insights
+# Uber Insights: A Ride Through Data
 
 This repository contains the source code for the Uber Insights project, which analyzes Uber trip data from August 2014 to uncover insights about rider behavior, peak usage times, and geographic distribution of trips. The analysis is conducted using R and various data visualization libraries.
 
